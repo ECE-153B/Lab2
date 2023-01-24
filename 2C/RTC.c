@@ -103,10 +103,44 @@ void RTC_Init(void) {
 
 void RTC_Set_Calendar_Date(uint32_t WeekDay, uint32_t Day, uint32_t Month, uint32_t Year) {
 	// [TODO] Write the date values in the correct place within the RTC Date Register
+	RTC->DR &= 0;
+
+	uint32_t weekOnes = WeekDay % 10;
+	uint32_t dayTens = Day / 10;
+	uint32_t dayOnes = Day % 10;
+	uint32_t monthTens = Month / 10;
+	uint32_t monthOnes = Month % 10;
+	uint32_t yearTens = Year / 10;
+	uint32_t yearOnes = Year % 10;
+
+	RTC->DR |= dayOnes;
+	RTC->DR |= dayTens << 4;
+	RTC->DR |= monthOnes << 8;
+	RTC->DR |= monthTens << 12;
+	RTC->DR |= weekOnes << 13;
+	RTC->DR |= yearOnes << 16;
+	RTC->DR |= yearTens << 20;
 }
 
 void RTC_Set_Time(uint32_t Format12_24, uint32_t Hour, uint32_t Minute, uint32_t Second) {
 	// [TODO] Write the time values in the correct place within the RTC Time Register
+	RTC->TR &= 0;
+
+	uint32_t secondTens = Second / 10;
+	uint32_t secondOnes = Second % 10;
+	uint32_t minuteTens = Minute / 10;
+	uint32_t minuteOnes = Minute % 10;
+	uint32_t hourTens = Hour / 10;
+	uint32_t hourOnes = Hour % 10;
+	uint32_t amPM = Format12_24 / 10;
+
+	RTC->TR |= secondOnes;
+	RTC->TR |= secondTens << 4;
+	RTC->TR |= minuteOnes << 8;
+	RTC->TR |= minuteTens << 12;
+	RTC->TR |= hourOnes << 16;
+	RTC->TR |= hourTens << 20;
+	RTC->TR |= amPM << 22;
 }
 
 void RTC_Clock_Init(void) {
@@ -148,18 +182,25 @@ void RTC_Clock_Init(void) {
 
 void RTC_Disable_Write_Protection(void) {
 	// [TODO]
-	RTC->WPR  |= 
+	RTC->WPR |= 0xCA;
+	RTC->WPR |= 0x53;
+
 	return 0;
 }
 	
 void RTC_Enable_Write_Protection(void) {
 	// [TODO]
+	RTC->WPR &= 0x000000000;
 	return 0;
 }
 
 uint32_t RTC_TIME_GetHour(void) {
 	// [TODO]
-	return 0;
+	uint32_t hourTens = (RTC->TR >> 20) * 10;
+	uint32_t hourOnes = RTC->TR >> 16;
+	uint32_t Hour = hourTens + hourOnes;
+
+	return Hour;
 }
 
 uint32_t RTC_TIME_GetMinute(void) {
