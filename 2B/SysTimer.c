@@ -15,7 +15,7 @@ void SysTick_Init(void) {
 	SysTick->CTRL = 0; // Disable SysTick IRQ and SysTick Counter
 	
 	// SysTick Reload Value Register
-	SysTick->LOAD = 100000; // [TODO] - Enter the correct LOAD value that will give us a 1 ms period
+	SysTick->LOAD = 7999; // [TODO] - Enter the correct LOAD value that will give us a 1 ms period
 	
 	// SysTick Current Value Register
 	SysTick->VAL = 0;
@@ -46,4 +46,11 @@ void delay(uint32_t T) {
 	uint32_t currentTicks; // Hint: It may be helpful to keep track of what the current tick count is
 	
 	// [TODO] - Implement function that waits until a time specified by argument T
+
+	msTicks = 0;
+	
+	while(msTicks < T) {
+
+	}
+	
 }
