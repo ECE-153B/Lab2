@@ -1,8 +1,8 @@
 /*
  * ECE 153B - Winter 2021
  *
- * Name(s):
- * Section:
+ * Name(s): Chris Fisher
+ * Section: Tuesday 7:00 - 10:00
  * Lab: 2A
  */
 
