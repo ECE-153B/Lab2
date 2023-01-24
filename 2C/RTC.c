@@ -148,6 +148,7 @@ void RTC_Clock_Init(void) {
 
 void RTC_Disable_Write_Protection(void) {
 	// [TODO]
+	RTC->WPR  |= 
 	return 0;
 }
 	
