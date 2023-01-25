@@ -67,10 +67,10 @@ void RTC_Init(void) {
 	// Configure the Date 
 	/* Note: __LL_RTC_CONVERT_BIN2BCD helper macro can be used if user wants to */
 	/*       provide directly the decimal value:                                */
-	RTC_Set_Calendar_Date(RTC_WEEKDAY_WEDNESDAY, 0x01, RTC_MONTH_JANUARY, 0x20); /* [TODO] These values are stubs - fill in current date */
+	RTC_Set_Calendar_Date(RTC_WEEKDAY_WEDNESDAY, 0x25, RTC_MONTH_JANUARY, 0x23); /* [TODO] These values are stubs - fill in current date */
 	
 	// Configure the Time 
-	RTC_Set_Time(RTC_TR_PM, 0x07, 0x00, 0x00); /* [TODO] These values are stubs - fill in current time */
+	RTC_Set_Time(RTC_TR_PM, 0x01, 0x35, 0x20); /* [TODO] These values are stubs - fill in current time */
   
 	// Exit of initialization mode 
 	RTC->ISR &= ~RTC_ISR_INIT;
@@ -103,10 +103,43 @@ void RTC_Init(void) {
 
 void RTC_Set_Calendar_Date(uint32_t WeekDay, uint32_t Day, uint32_t Month, uint32_t Year) {
 	// [TODO] Write the date values in the correct place within the RTC Date Register
+	uint32_t DayU = Day % 10;
+	uint32_t DayT = Day / 10;
+	uint32_t MonthU = Month % 10;
+	uint32_t MonthT = Month / 10;
+	uint32_t YearU = Year % 10;
+	uint32_t YearT = Year / 10;
+	
+	RTC->DR &= 0;
+
+	RTC->DR |= DayU;
+	RTC->DR |= DayT << 4;
+	RTC->DR |= MonthU << 8;
+	RTC->DR |= MonthT << 12;	
+	RTC->DR |= WeekDay << 13;
+	RTC->DR |= YearU << 16;
+	RTC->DR |= YearT << 20;
 }
 
 void RTC_Set_Time(uint32_t Format12_24, uint32_t Hour, uint32_t Minute, uint32_t Second) {
 	// [TODO] Write the time values in the correct place within the RTC Time Register
+	uint32_t SecondU = Second % 10;
+	uint32_t SecondT = Second / 10;
+	uint32_t MinuteU = Minute % 10;
+	uint32_t MinuteT = Minute / 10;
+	uint32_t HourU = Hour % 10;
+	uint32_t HourT = Hour / 10;
+	uint32_t Format = Format12_24 / 10;
+	
+	RTC->TR &= 0;
+
+	RTC->TR |= SecondU;
+	RTC->TR |= SecondT << 4;
+	RTC->TR |= MinuteU << 8;
+	RTC->TR |= MinuteT << 12;	
+	RTC->TR |= HourU << 16;
+	RTC->TR |= HourT << 20;
+	RTC->TR |= Format << 22;
 }
 
 void RTC_Clock_Init(void) {
@@ -147,49 +180,52 @@ void RTC_Clock_Init(void) {
 }
 
 void RTC_Disable_Write_Protection(void) {
-	// [TODO]
-	RTC->WPR  |= 
-	return 0;
+	RTC->WPR |= 0xCA;
+	RTC->WPR |= 0x53;
 }
 	
 void RTC_Enable_Write_Protection(void) {
-	// [TODO]
-	return 0;
+	RTC->WPR &= 0x00000000;
 }
 
 uint32_t RTC_TIME_GetHour(void) {
-	// [TODO]
-	return 0;
+	uint32_t tens = (RTC->TR >> 20) * 10;
+	uint32_t units = (RTC->TR >> 16);
+	return  tens + units;
 }
 
 uint32_t RTC_TIME_GetMinute(void) {
-	// [TODO]
-	return 0;
+	uint32_t tens = (RTC->TR >> 12) * 10;
+	uint32_t units = (RTC->TR >> 8);
+	return  tens + units;
 }
 
 uint32_t RTC_TIME_GetSecond(void) {
-	// [TODO]
-	return 0;
+	uint32_t tens = (RTC->TR >> 4) * 10;
+	uint32_t units = RTC->TR;
+	return  tens + units;
 }
 
 uint32_t RTC_DATE_GetMonth(void) {
-	// [TODO]
-	return 0;
+	uint32_t tens = (RTC->DR >> 12) * 10;
+	uint32_t units = (RTC->DR >> 8);
+	return  tens + units;
 }
 
 uint32_t RTC_DATE_GetDay(void) {
-	// [TODO]
-	return 0;
+	uint32_t tens = (RTC->DR >> 4) * 10;
+	uint32_t units = RTC->DR;
+	return  tens + units;
 }
 
 uint32_t RTC_DATE_GetYear(void) {
-	// [TODO]
-	return 0;
+	uint32_t tens = (RTC->DR >> 20) * 10;
+	uint32_t units = (RTC->DR >> 16);
+	return  tens + units;
 }
 
 uint32_t RTC_DATE_GetWeekDay(void) {
-	// [TODO]
-	return 0;
+	return RTC->DR >> 13;
 }
 
 void Get_RTC_Calendar(char * strTime, char * strDate) {
