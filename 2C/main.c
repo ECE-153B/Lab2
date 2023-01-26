@@ -56,5 +56,6 @@ int main(void) {
 	
 	while(1) {
 		// [TODO]
+		Get_RTC_Calendar(strTime, strDate);
 	}
 }
