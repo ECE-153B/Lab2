@@ -189,43 +189,43 @@ void RTC_Enable_Write_Protection(void) {
 }
 
 uint32_t RTC_TIME_GetHour(void) {
-	uint32_t tens = (RTC->TR >> 20) * 10;
-	uint32_t units = (RTC->TR >> 16);
+	uint32_t tens = (RTC->TR & RTC_TR_HT) >> 20 * 10;
+	uint32_t units = (RTC->TR & RTC_TR_HU) >> 16;
 	return  tens + units;
 }
 
 uint32_t RTC_TIME_GetMinute(void) {
-	uint32_t tens = (RTC->TR >> 12) * 10;
-	uint32_t units = (RTC->TR >> 8);
+	uint32_t tens = (RTC->TR & RTC_TR_MNT) >> 12 * 10;
+	uint32_t units = (RTC->TR & RTC_TR_MNU) >> 8;
 	return  tens + units;
 }
 
 uint32_t RTC_TIME_GetSecond(void) {
-	uint32_t tens = (RTC->TR >> 4) * 10;
-	uint32_t units = RTC->TR;
+	uint32_t tens = (RTC->TR & RTC_TR_ST) >> 4 * 10;
+	uint32_t units = RTC->TR & RTC_TR_SU;
 	return  tens + units;
 }
 
 uint32_t RTC_DATE_GetMonth(void) {
-	uint32_t tens = (RTC->DR >> 12) * 10;
-	uint32_t units = (RTC->DR >> 8);
+	uint32_t tens = (RTC->DR & RTC_DR_MT) >> 12 * 10;
+	uint32_t units = (RTC->DR & RTC_DR_MU) >> 8;
 	return  tens + units;
 }
 
 uint32_t RTC_DATE_GetDay(void) {
-	uint32_t tens = (RTC->DR >> 4) * 10;
-	uint32_t units = RTC->DR;
+	uint32_t tens = (RTC->DR & RTC_DR_DT) >> 4 * 10;
+	uint32_t units = RTC->DR & RTC_DR_DU;
 	return  tens + units;
 }
 
 uint32_t RTC_DATE_GetYear(void) {
-	uint32_t tens = (RTC->DR >> 20) * 10;
-	uint32_t units = (RTC->DR >> 16);
+	uint32_t tens = (RTC->DR & RTC_DR_YT) >> 20 * 10;
+	uint32_t units = (RTC->DR & RTC_DR_YU) >> 16;
 	return  tens + units;
 }
 
 uint32_t RTC_DATE_GetWeekDay(void) {
-	return RTC->DR >> 13;
+	return (RTC->DR & RTC_DR_WDU) >> 13;
 }
 
 void Get_RTC_Calendar(char * strTime, char * strDate) {
