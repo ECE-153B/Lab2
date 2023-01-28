@@ -1,8 +1,8 @@
 /*
  * ECE 153B - Winter 2023
  *
- * Name(s):
- * Section:
+ * Name(s): Chris Fisher and Kenny Bui
+ * Section: Tuesday
  * Lab: 2C
  */
  
